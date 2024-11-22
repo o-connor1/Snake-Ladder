@@ -1,27 +1,55 @@
-var builder = WebApplication.CreateBuilder(args);
+using System.Diagnostics;
+using Snake___Ladder.Models;
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+//Read number of cells
+Console.WriteLine("Enter the number of cells on the board:");
+int cellsCount = int.Parse(Console.ReadLine());
 
-var app = builder.Build();
+//Read number of sides of the die
+Console.WriteLine("Enter the number of sides of the die:");
+int sideCount = int.Parse(Console.ReadLine());
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+//Initialise the game
+Game game = new Game(cellsCount, sideCount);
+
+Console.WriteLine("Enter the number of snakes:");
+int snakesCount = int.Parse(Console.ReadLine());
+
+// Read snake positions
+Console.WriteLine("Enter the head and tail positions of each snake:");
+for (int i = 0; i < snakesCount; i++)
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    string[] input = Console.ReadLine().Split();
+    int head = int.Parse(input[0]);
+    int tail = int.Parse(input[1]);
+    game.AddSnakeAndLadder(head, tail);
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+// Read number of ladders
+Console.WriteLine("Enter the number of ladders:");
+int laddersCount = int.Parse(Console.ReadLine());
 
-app.UseRouting();
+// Read ladder positions
+Console.WriteLine("Enter the start and end positions of each ladder:");
+for (int i = 0; i < laddersCount; i++)
+{
+    string[] input = Console.ReadLine().Split();
+    int start = int.Parse(input[0]);
+    int end = int.Parse(input[1]);
+    game.AddSnakeAndLadder(start, end);
+}
 
-app.UseAuthorization();
+// Read number of players
+Console.WriteLine("Enter the number of players:");
+int playersCount = int.Parse(Console.ReadLine());
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+// Read player names
+Console.WriteLine("Enter the names of each player:");
+for (int i = 0; i < playersCount; i++)
+{
+    string playerName = Console.ReadLine();
+    Player player = new Player(playerName);
+    game.AddPlayer(player);
+}
 
-app.Run();
+game.StartGame();
